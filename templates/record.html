@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Record Disease - Crop Disease Platform{% endblock %}
+
+{% block content %}
+<div class="record-container">
+    <h1>Record Disease Occurrence</h1>
+    
+    {% if message %}
+    <div class="alert alert-{{ 'success' if 'successfully' in message else 'error' }}">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="record-form">
+        <div class="form-group">
+            <label for="farmer_name">Farmer Name: <span class="required">*</span></label>
+            <input type="text" id="farmer_name" name="farmer_name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="crop_id">Select Crop: <span class="required">*</span></label>
+            <select id="crop_id" name="crop_id" onchange="loadDiseases()" required>
+                <option value="">-- Choose a crop --</option>
+                {% for crop_id, crop_name in crops %}
+                <option value="{{ crop_id }}">{{ crop_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="disease_id">Select Disease: <span class="required">*</span></label>
+            <select id="disease_id" name="disease_id" required>
+                <option value="">-- Select disease --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="affected_area">Affected Area (Hectares): <span class="required">*</span></label>
+            <input type="number" id="affected_area" name="affected_area" step="0.01" required>
+        </div>
+
+        <div class="form-group">
+            <label for="date_observed">Date Observed: <span class="required">*</span></label>
+            <input type="date" id="date_observed" name="date_observed" required>
+        </div>
+
+        <div class="form-group">
+            <label for="severity">Severity:</label>
+            <select id="severity" name="severity">
+                <option value="">-- Select severity --</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Very High">Very High</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Additional Notes:</label>
+            <textarea id="notes" name="notes" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Record</button>
+    </form>
+</div>
+
+<script>
+function loadDiseases() {
+    const cropId = document.getElementById('crop_id').value;
+    const diseaseSelect = document.getElementById('disease_id');
+    
+    if (cropId) {
+        fetch(`/api/diseases/${cropId}`)
+            .then(response => response.json())
+            .then(data => {
+                diseaseSelect.innerHTML = '<option value="">-- Select disease --</option>';
+                data.forEach(disease => {
+                    const option = document.createElement('option');
+                    option.value = disease.id;
+                    option.textContent = disease.name;
+                    diseaseSelect.appendChild(option);
+                });
+            });
+    }
+}
+</script>
+{% endblock %}

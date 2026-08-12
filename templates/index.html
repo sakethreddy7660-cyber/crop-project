@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Crop Disease Platform{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+
+<section class="hero-new">
+
+    <div class="hero-left">
+
+        <span class="hero-tag">
+            🌱 Smart Agriculture Platform
+        </span>
+
+        <h1>
+            Smart Crop Care,<br>
+            Healthy Future
+        </h1>
+
+        <p>
+            Identify crop diseases early, receive treatment recommendations,
+            and manage crop health using our Digital Crop Disease Information &
+            Management Platform.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="{{ url_for('search') }}" class="btn-green">
+                🔍 Search Diseases
+            </a>
+
+            <a href="{{ url_for('record') }}" class="btn-outline">
+                📋 Record Disease
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- STATS -->
+
+<section class="stats-section">
+
+    <div class="stat-card">
+        <div class="stat-icon">🌾</div>
+        <h2>{{ crops|length }}</h2>
+        <p>Supported Crops</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🦠</div>
+        <h2>9+</h2>
+        <p>Diseases</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <h2>24/7</h2>
+        <p>Knowledge Base</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <h2>100%</h2>
+        <p>Digital Records</p>
+    </div>
+
+</section>
+
+<!-- FEATURES -->
+
+<section class="features-section">
+
+<h2 class="section-title">Powerful Features</h2>
+
+<div class="features-grid">
+
+<div class="feature-box">
+<div class="feature-icon">🔍</div>
+<h3>Disease Search</h3>
+<p>Search diseases using crop type and symptoms.</p>
+</div>
+
+<div class="feature-box">
+<div class="feature-icon">💊</div>
+<h3>Treatment Guide</h3>
+<p>View prevention and treatment methods.</p>
+</div>
+
+<div class="feature-box">
+<div class="feature-icon">📋</div>
+<h3>Record Management</h3>
+<p>Store disease records.</p>
+</div>
+
+<div class="feature-box">
+<div class="feature-icon">📊</div>
+<h3>Analytics</h3>
+<p>Track crop disease information.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- CROPS -->
+
+<section class="crops-section">
+
+<h2 class="section-title">
+
+Supported Crops
+
+</h2>
+
+<div class="crop-grid">
+
+{% for crop_id,crop_name in crops %}
+
+<div class="crop-box">
+
+<div class="crop-image">
+
+{% if crop_name == "Maize" %}
+<img src="{{ url_for('static', filename='images/crops/maize.jpg') }}">
+
+{% elif crop_name == "Potato" %}
+<img src="{{ url_for('static', filename='images/crops/potato.jpg') }}">
+
+{% elif crop_name == "Rice" %}
+<img src="{{ url_for('static', filename='images/crops/rice.jpg') }}">
+
+{% elif crop_name == "Tomato" %}
+<img src="{{ url_for('static', filename='images/crops/tomato.jpg') }}">
+
+{% elif crop_name == "Wheat" %}
+<img src="{{ url_for('static', filename='images/crops/wheat.jpg') }}">
+
+{% endif %}
+
+</div>
+<h3>{{ crop_name }}</h3>
+
+<p class="crop-status">
+
+🌱 Healthy Crop Monitoring
+
+</p>
+
+<a href="{{ url_for('crop_details', crop_id=crop_id) }}" class="crop-btn">
+    Explore →
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+<!-- CTA -->
+
+<section class="cta-section">
+
+<h2>
+
+Early Detection. Better Yield.
+
+</h2>
+
+<p>
+
+Protect your crops with timely disease identification.
+
+</p>
+
+<a href="{{ url_for('search') }}" class="btn-green">
+
+Start Searching
+
+</a>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Search Diseases - Crop Disease Platform{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <h1>Search for Crop Diseases</h1>
+    
+    <form method="POST" class="search-form">
+        <div class="form-group">
+            <label for="crop_id">Select Crop:</label>
+            <select id="crop_id" name="crop_id" required>
+                <option value="">-- Choose a crop --</option>
+                {% for crop_id, crop_name in crops %}
+                <option value="{{ crop_id }}">{{ crop_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select Symptoms (Choose one or more):</label>
+            <div class="symptoms-list">
+                {% for symptom_id, symptom_name in symptoms %}
+                <div class="checkbox-item">
+                    <input type="checkbox" id="symptom_{{ symptom_id }}" 
+                           name="symptoms" value="{{ symptom_id }}">
+                    <label for="symptom_{{ symptom_id }}">{{ symptom_name }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Search Diseases</button>
+    </form>
+</div>
+
+{% if search_performed %}
+<div class="search-results">
+    <h2>Search Results</h2>
+    
+    {% if diseases %}
+    <div class="diseases-grid">
+        {% for disease in diseases %}
+        <div class="disease-card">
+            <h3>{{ disease[1] }}</h3>
+            <p><strong>Crop:</strong> {{ disease[7] }}</p>
+            <p><strong>Severity:</strong> <span class="severity-{{ disease[6]|lower }}">{{ disease[6] }}</span></p>
+            <p><strong>Affected Stage:</strong> {{ disease[3] }}</p>
+            <a href="{{ url_for('disease_detail', disease_id=disease[0]) }}" class="btn btn-small">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <p>No diseases found matching your search criteria. Please try different symptoms.</p>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

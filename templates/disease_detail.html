@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ disease[1] }} - Crop Disease Platform{% endblock %}
+
+{% block content %}
+<div class="disease-detail">
+    <div class="detail-header">
+        <h1>{{ disease[1] }}</h1>
+        <div style="text-align:center; margin:20px 0;">
+            <img
+                src="{{ url_for('static', filename='images/diseases/' + image_name) }}"
+                alt="{{ disease[1] }}"
+                style="max-width:400px; width:100%; border-radius:12px;">
+        </div>
+        <span class="severity-badge severity-{{ disease[6]|lower }}">{{ disease[6] }}</span>
+    </div>
+
+    <div class="detail-content">
+        <div class="section">
+            <h3>Basic Information</h3>
+            <p><strong>Crop:</strong> {{ disease[7] }}</p>
+            <p><strong>Cause:</strong> {{ disease[2] }}</p>
+            <p><strong>Affected Crop Stage:</strong> {{ disease[3] }}</p>
+        </div>
+
+        <div class="section">
+            <h3>Related Symptoms</h3>
+            <ul class="symptoms-list">
+                {% for symptom in symptoms %}
+                <li>
+                    <strong>{{ symptom[0] }}:</strong> {{ symptom[1] }}
+                </li>
+                {% else %}
+                <li>No symptoms recorded</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Prevention Methods</h3>
+            <div class="prevention-box">
+                {{ disease[4] }}
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Treatment Options</h3>
+            <div class="treatment-box">
+                {{ disease[5] }}
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a href="{{ url_for('record') }}" class="btn btn-primary">Record This Disease</a>
+        <a href="{{ url_for('search') }}" class="btn btn-secondary">Back to Search</a>
+    </div>
+</div>
+{% endblock %}

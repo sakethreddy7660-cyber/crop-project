@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}{{ crop[0] }}{% endblock %}
+
+{% block content %}
+
+<section class="crop-page">
+
+    <div class="crop-hero">
+
+        <div class="crop-detail-image">
+
+            {% if crop[0] == "Rice" %}
+                <img src="{{ url_for('static', filename='images/crops/rice.jpg') }}">
+
+            {% elif crop[0] == "Wheat" %}
+                <img src="{{ url_for('static', filename='images/crops/wheat.jpg') }}">
+
+            {% elif crop[0] == "Tomato" %}
+                <img src="{{ url_for('static', filename='images/crops/tomato.jpg') }}">
+
+            {% elif crop[0] == "Potato" %}
+                <img src="{{ url_for('static', filename='images/crops/potato.jpg') }}">
+
+            {% elif crop[0] == "Maize" %}
+                <img src="{{ url_for('static', filename='images/crops/maize.jpg') }}">
+
+            {% endif %}
+
+        </div>
+
+        <div class="crop-content">
+
+            <span class="crop-tag">
+
+                {{ crop[2] }}
+
+            </span>
+
+            <h1>{{ crop[0] }}</h1>
+
+            <p>
+
+                {{ crop[1] }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="info-grid">
+
+        <div class="info-box">
+            <h3>Climate</h3>
+            <p>{{ crop[3] }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Temperature</h3>
+            <p>{{ crop[4] }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Rainfall</h3>
+            <p>{{ crop[5] }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Soil Type</h3>
+            <p>{{ crop[6] }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Soil pH</h3>
+            <p>{{ crop[7] }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Growing Season</h3>
+            <p>{{ crop[8] }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Sowing Time</h3>
+            <p>{{ crop[9] }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Harvest Time</h3>
+            <p>{{ crop[10] }}</p>
+        </div>
+
+    </div>
+
+    <div class="content-card">
+
+        <h2>Recommended Fertilizer</h2>
+
+        <p>{{ crop[11] }}</p>
+
+    </div>
+
+    <div class="content-card">
+
+        <h2>Uses</h2>
+
+        <p>{{ crop[12] }}</p>
+
+    </div>
+
+    <div class="content-card">
+
+        <h2>Disease Prevention</h2>
+
+        <p>{{ crop[13] }}</p>
+
+    </div>
+
+    <div class="content-card">
+
+        <h2>Common Diseases</h2>
+
+        {% if diseases %}
+
+        <ul class="disease-list">
+
+            {% for disease in diseases %}
+
+            <li>{{ disease[0] }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+        {% else %}
+
+        <p>No diseases available.</p>
+
+        {% endif %}
+
+    </div>
+
+    <div class="crop-actions">
+
+        <a href="{{ url_for('search') }}" class="btn-green">
+
+            Search Diseases
+
+        </a>
+
+        <a href="{{ url_for('index') }}" class="btn-outline">
+
+            Back Home
+
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}
