@@ -1,9 +1,11 @@
 import sqlite3
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.secret_key = "crop-project-secret-key"
 
 
 # =====================================================
@@ -21,6 +23,12 @@ def init_db():
     conn = get_db()
 
     conn.executescript("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+    );
     
     CREATE TABLE IF NOT EXISTS crops (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -457,6 +465,69 @@ def init_db():
     print("Database initialized successfully!")
 
 
+
+# =====================================================
+# LOGIN / REGISTER
+# =====================================================
+
+@app.before_request
+def auth():
+    if request.endpoint not in ["login", "register", "static"] and "user_id" not in session:
+        return redirect(url_for("login"))
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form["username"].strip()
+        email = request.form["email"].strip().lower()
+        password = request.form["password"]
+
+        conn = get_db()
+        try:
+            conn.execute(
+                "INSERT INTO users (username,email,password) VALUES (?,?,?)",
+                (username, email, generate_password_hash(password))
+            )
+            conn.commit()
+            conn.close()
+            return redirect(url_for("login"))
+        except sqlite3.IntegrityError:
+            conn.close()
+            return render_template("register.html", error="Username or email already exists.")
+
+    return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"].strip().lower()
+        password = request.form["password"]
+
+        conn = get_db()
+        user = conn.execute(
+            "SELECT * FROM users WHERE email=?", (email,)
+        ).fetchone()
+        conn.close()
+
+        if user and check_password_hash(user["password"], password):
+            session.clear()
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            return redirect(url_for("index"))
+
+        return render_template("login.html", error="Invalid email or password.")
+
+    return render_template("login.html")
+
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
 # =====================================================
 # HOME
 # =====================================================
@@ -817,9 +888,9 @@ def internal_error(error):
 # START APPLICATION
 # =====================================================
 
-if __name__ == "__main__":
+init_db()
 
-    init_db()
+if __name__ == "__main__":
 
     app.run(
         debug=True,
